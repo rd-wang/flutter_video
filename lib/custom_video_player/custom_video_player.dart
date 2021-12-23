@@ -74,7 +74,7 @@ class CustomVideoPlayerState extends State<CustomVideoPlayer> {
   Widget build(BuildContext context) {
     return _CustomVideoControllerProvider(
       controller: widget.controller,
-      child: const CustomPlayerWithControls(),
+      child: CustomPlayerWithControls(),
     );
   }
 
@@ -157,7 +157,7 @@ class CustomVideoPlayerState extends State<CustomVideoPlayer> {
   ) {
     final controllerProvider = _CustomVideoControllerProvider(
       controller: widget.controller,
-      child: const CustomPlayerWithControls(),
+      child: CustomPlayerWithControls(),
     );
 
     if (widget.controller.routePageBuilder == null) {
@@ -295,7 +295,7 @@ class CustomVideoController extends ChangeNotifier {
   final bool showControlsOnInitialize;
 
   /// Whether or not to show the controls at all
-  final bool showControls;
+  bool showControls;
 
   /// Defines customised controls. Check [MaterialControls] or
   /// [CupertinoControls] for reference.
@@ -412,6 +412,12 @@ class CustomVideoController extends ChangeNotifier {
 
   void toggleFullScreen() {
     _isFullScreen = !_isFullScreen;
+    notifyListeners();
+  }
+
+  // 支持视频底部控制条动态隐藏显示
+  void showVideoControllers(bool show) {
+    showControls = show;
     notifyListeners();
   }
 

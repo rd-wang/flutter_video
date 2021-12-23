@@ -1,3 +1,5 @@
-## [0.0.1] - TODO: Add release date.
+## [1.0.0] - TODO: Add release date.
 
 * TODO: Describe initial release.
+
+## [1.0.1] - 添加视频控制器底部进度条等隐藏显示功能
