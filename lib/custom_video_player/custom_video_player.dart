@@ -16,6 +16,8 @@ typedef CustomRoutePageBuilder = Widget Function(
   _CustomVideoControllerProvider controllerProvider,
 );
 
+typedef CheckNet = bool Function();
+
 /// A Video Player with Material and Cupertino skins.
 ///
 /// `video_player` is pretty low level. Chewie wraps it in a friendly skin to
@@ -272,6 +274,7 @@ class CustomVideoController extends ChangeNotifier {
     this.systemOverlaysAfterFullScreen = SystemUiOverlay.values,
     this.deviceOrientationsAfterFullScreen = DeviceOrientation.values,
     this.routePageBuilder,
+    this.isNetNone,
   }) : assert(playbackSpeeds.every((speed) => speed > 0), 'The playbackSpeeds values must all be greater than 0') {
     _initialize();
   }
@@ -357,6 +360,8 @@ class CustomVideoController extends ChangeNotifier {
 
   /// Defines a custom RoutePageBuilder for the fullscreen
   final CustomRoutePageBuilder routePageBuilder;
+
+  final CheckNet isNetNone;
 
   static CustomVideoController of(BuildContext context) {
     final _customVideoControllerProvider = context.dependOnInheritedWidgetOfExactType<_CustomVideoControllerProvider>();

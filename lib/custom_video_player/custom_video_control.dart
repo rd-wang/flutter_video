@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:roobo_net/net_state/net_state.dart';
-import 'package:roobo_toast/toast/toast_util.dart';
 import 'package:roobo_video/custom_video_player/tool_overscorll_behavior.dart';
 import 'package:roobo_video/custom_video_player/widget_process_load.dart';
 import 'package:video_player/video_player.dart';
@@ -439,9 +437,10 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
 
   void _playPause() {
     final isFinished = _latestValue.position >= _latestValue.duration;
-    if (NetState.getInstance.netResult == NetConnectResult.none) {
-      ToastUtil.showToast("网络不给力，请检查网络设置或稍后重试", type: ToastType.Info);
-      return;
+    if (_customController.isNetNone != null) {
+      if (_customController.isNetNone()) {
+        return;
+      }
     }
     setState(() {
       if (controller.value.isPlaying) {

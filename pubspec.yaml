@@ -24,15 +24,6 @@ dependencies:
   wakelock: ^0.5.0+2
   flutter_spinkit: ^5.0.0 #progress动画库
 
-  roobo_net:
-    git:
-      url: git@git.365jiating.com:app_base_project/roobo_net.git
-      ref: 1.0.0
-
-  roobo_toast:
-    git:
-      url: git@git.365jiating.com:app_base_project/roobo_toast.git
-      ref: 1.1.0
 
 dev_dependencies:
   flutter_test:
