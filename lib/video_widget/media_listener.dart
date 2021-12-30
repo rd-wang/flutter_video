@@ -1,0 +1,36 @@
+typedef MediaEnablePlay = void Function(bool canPlay);
+typedef MediaStopPlay = void Function();
+typedef MediaInitCompleted = void Function(MediaController mediaController);
+typedef MediaStartPlay = void Function(MediaController mediaController);
+
+class MediaWidgetListener {
+  MediaEnablePlay videoEnablePlay;
+  MediaStopPlay videoStopPlay;
+
+  MediaWidgetListener({this.videoEnablePlay, this.videoStopPlay});
+}
+
+// 外部控制
+class MediaController {
+  MediaWidgetListener _videoWidgetListener;
+
+  setMediaEnablePlay(bool canPlay) {
+    if (this._videoWidgetListener != null) {
+      if (this._videoWidgetListener.videoEnablePlay != null) {
+        this._videoWidgetListener.videoEnablePlay(canPlay);
+      }
+    }
+  }
+
+  stopMediaPlay() {
+    if (this._videoWidgetListener != null) {
+      if (this._videoWidgetListener.videoStopPlay != null) {
+        this._videoWidgetListener.videoStopPlay();
+      }
+    }
+  }
+
+  addListener(MediaWidgetListener listener) {
+    this._videoWidgetListener = listener;
+  }
+}
