@@ -49,9 +49,7 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
     mediaController.addListener(MediaWidgetListener(videoStopPlay: () {
       _videoPlayerController.pause();
     }));
-    Future.delayed(Duration(milliseconds: 800)).then((value) {
-      initializePlayer();
-    });
+    initializePlayer();
   }
 
   @override
