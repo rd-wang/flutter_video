@@ -41,6 +41,7 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
   double progress = 0;
   bool isPlay = false;
   MediaController mediaController;
+  bool isHideBottom = true;
 
   @override
   void initState() {
@@ -104,12 +105,18 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
       if (!_videoPlayerController.value.isPlaying) {
         setState(() {
           isPlay = false;
-          _customVideoController.showVideoControllers(false);
+          if (isHideBottom) {
+            _customVideoController?.showVideoControllers(false);
+            isHideBottom = false;
+          }
         });
       } else if (_videoPlayerController.value.isPlaying) {
         setState(() {
           isPlay = true;
-          _customVideoController.showVideoControllers(true);
+          if (!isHideBottom) {
+            _customVideoController?.showVideoControllers(true);
+            isHideBottom = true;
+          }
           if (widget.startPlay != null) {
             widget.startPlay(mediaController);
           }
