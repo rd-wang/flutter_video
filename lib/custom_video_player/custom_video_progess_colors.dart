@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class CustomVideoProgressColors {
   CustomVideoProgressColors({
-    Color playedColor = const Color.fromRGBO(255, 98, 0, 1),
+    Color playedColor = const Color(0xFFFFFFFF),
     Color bufferedColor = Colors.transparent,
-    Color handleColor = const Color.fromRGBO(255, 98, 0, 1),
-    Color backgroundColor = const Color.fromRGBO(34, 34, 34, 0.9),
+    Color handleColor = const Color(0xFFFFFFFF),
+    Color backgroundColor = const  Color(0x80FFFFFF),
   })  : playedPaint = Paint()..color = playedColor,
         bufferedPaint = Paint()..color = bufferedColor,
         handlePaint = Paint()..color = handleColor,

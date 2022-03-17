@@ -233,7 +233,15 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
           height: barHeight,
           margin: const EdgeInsets.only(left: 10, right: 10),
           child: Center(
-            child: customVideoController.isFullScreen ? Image.asset('res/img/video_player_no_full.png') : Image.asset('res/img/video_player_full.png'),
+            child: customVideoController.isFullScreen
+                ? Image.asset(
+                    'res/img/video_player_no_full.png',
+                    package: 'roobo_video',
+                  )
+                : Image.asset(
+                    'res/img/video_player_full.png',
+                    package: 'roobo_video',
+                  ),
           ),
         ),
       ),
@@ -372,7 +380,15 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
         height: barHeight,
         color: Colors.transparent,
         margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-        child: controller.value.isPlaying ? Image.asset('res/img/video_player_play.png') : Image.asset('res/img/video_player_pause.png'),
+        child: !controller.value.isPlaying
+            ? Image.asset(
+                'res/img/video_player_play.png',
+                package: 'roobo_video',
+              )
+            : Image.asset(
+                'res/img/video_player_pause.png',
+                package: 'roobo_video',
+              ),
       ),
     );
   }

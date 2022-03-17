@@ -30,6 +30,10 @@ class MediaController {
     }
   }
 
+  dfasdf() {
+    // fff
+  }
+
   addListener(MediaWidgetListener listener) {
     this._videoWidgetListener = listener;
   }

@@ -165,18 +165,18 @@ class _ProgressBarPainter extends CustomPainter {
     if (playedPart > 1) {
       offset = Offset(playedPart - 6.5, size.height / 2 + height / 2);
     }
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromCenter(center: Offset(play + 6.5, size.height / 2 + height / 2), width: 13, height: 17),
-        const Radius.circular(9.0),
-      ),
-      colors.handlePaint,
-    );
+    // canvas.drawRRect(
+    //   RRect.fromRectAndRadius(
+    //     Rect.fromCenter(center: Offset(play + 6.5, size.height / 2 + height / 2), width: 13, height: 17),
+    //     const Radius.circular(9.0),
+    //   ),
+    //   colors.handlePaint,
+    // );
 
-//    canvas.drawCircle(
-//      Offset(playedPart, size.height / 2 + height / 2),
-//      height * 3,
-//      colors.handlePaint,
-//    );
+   canvas.drawCircle(
+     Offset(playedPart+.5, size.height / 2 + height / 2),
+     height * 2,
+     colors.handlePaint,
+   );
   }
 }
