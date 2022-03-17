@@ -80,33 +80,33 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
             onTap: () => _cancelAndRestartTimer(),
             child: AbsorbPointer(
               absorbing: _hideStuff,
-              child: Column(
-                children: <Widget>[
+              child: Stack(
+                children: [
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    child: SafeArea(
+                      minimum: EdgeInsets.only(bottom: 20),
+                      child: Visibility(
+                        visible: customVideoController.showControls,
+                        child: _buildBottomBar(context),
+                      ),
+                    ),
+                  ),
                   if (_latestValue.isBuffering)
-                    Expanded(
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ProgressLoadWidget(type: ProgressLoadType.Circle),
-                            Text(
-                              "加载中",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ProgressLoadWidget(type: ProgressLoadType.Circle),
+                          Text(
+                            "加载中",
+                            style: TextStyle(color: Colors.white,fontSize: 12),
+                          ),
+                        ],
                       ),
                     )
                   else
                     _buildHitArea(),
-                  // Padding(
-                  //   padding: EdgeInsets.only(bottom: customVideoController.isFullScreen ? MediaQuery.of(context).viewPadding.bottom + 25.0 : 0),
-                  //   child: _buildBottomBar(context),
-                  // )
-                  SafeArea(
-                    minimum: EdgeInsets.only(bottom: 20),
-                    child: _buildBottomBar(context),
-                  ),
                 ],
               ),
             ),
@@ -248,50 +248,48 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
     );
   }
 
-  Expanded _buildHitArea() {
+   _buildHitArea() {
     final bool isFinished = _latestValue.position >= _latestValue.duration;
 
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          if (_latestValue.isPlaying) {
-            if (_displayTapped) {
-              setState(() {
-                _hideStuff = true;
-              });
-            } else {
-              _cancelAndRestartTimer();
-            }
-          } else {
-            _playPause();
-
+    return GestureDetector(
+      onTap: () {
+        if (_latestValue.isPlaying) {
+          if (_displayTapped) {
             setState(() {
               _hideStuff = true;
             });
+          } else {
+            _cancelAndRestartTimer();
           }
-        },
-        child: Container(
-          child: Center(
-            child: AnimatedOpacity(
-              opacity: !_latestValue.isPlaying && !_dragging ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 300),
-              child: GestureDetector(
-                child: Container(
-                  child: IconButton(
-                      icon: isFinished
-                          ? Visibility(visible: false, child: const Icon(Icons.replay, size: 32.0))
-                          : Visibility(
-                              visible: false,
-                              child: AnimatedIcon(
-                                icon: AnimatedIcons.play_pause,
-                                progress: playPauseIconAnimationController,
-                                size: 32.0,
-                              ),
+        } else {
+          _playPause();
+
+          setState(() {
+            _hideStuff = true;
+          });
+        }
+      },
+      child: Container(
+        child: Center(
+          child: AnimatedOpacity(
+            opacity: !_latestValue.isPlaying && !_dragging ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 300),
+            child: GestureDetector(
+              child: Container(
+                child: IconButton(
+                    icon: isFinished
+                        ? Visibility(visible: false, child: const Icon(Icons.replay, size: 32.0))
+                        : Visibility(
+                            visible: false,
+                            child: AnimatedIcon(
+                              icon: AnimatedIcons.play_pause,
+                              progress: playPauseIconAnimationController,
+                              size: 32.0,
                             ),
-                      onPressed: () {
-                        _playPause();
-                      }),
-                ),
+                          ),
+                    onPressed: () {
+                      _playPause();
+                    }),
               ),
             ),
           ),

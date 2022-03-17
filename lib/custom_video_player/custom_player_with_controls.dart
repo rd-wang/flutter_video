@@ -24,7 +24,7 @@ class CustomPlayerWithControls extends StatelessWidget {
       CustomVideoController customVideoController,
     ) {
       final controls = VideoControlWidget();
-      return customVideoController.showControls ? customVideoController.customControls ?? controls : Container();
+      return customVideoController.customControls ?? controls;
     }
 
     Stack _buildPlayerWithControls(CustomVideoController customVideoController, BuildContext context) {
