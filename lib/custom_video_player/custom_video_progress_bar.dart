@@ -64,9 +64,9 @@ class _CustomVideoProgressBarState extends State<CustomVideoProgressBar> {
           return;
         }
         _controllerWasPlaying = controller.value.isPlaying;
-        if (_controllerWasPlaying) {
-          controller.pause();
-        }
+        // if (_controllerWasPlaying) {
+        //   controller.pause();
+        // }
 
         widget.onDragStart?.call();
       },
@@ -79,9 +79,9 @@ class _CustomVideoProgressBarState extends State<CustomVideoProgressBar> {
         widget.onDragUpdate?.call();
       },
       onHorizontalDragEnd: (DragEndDetails details) {
-        if (_controllerWasPlaying) {
-          controller.play();
-        }
+        // if (_controllerWasPlaying) {
+        //   controller.play();
+        // }
 
         widget.onDragEnd?.call();
       },

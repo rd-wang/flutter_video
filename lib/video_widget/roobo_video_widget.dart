@@ -108,18 +108,19 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
           title: widget.title,
         ),
         Positioned.fill(
-            child: Visibility(
-          child: IconButton(
-            icon: Image.asset(
-              "res/img/icon_page_video_play.png",
-              package: 'roobo_video',
+          child: Visibility(
+            child: IconButton(
+              icon: Image.asset(
+                "res/img/icon_page_video_play.png",
+                package: 'roobo_video',
+              ),
+              onPressed: () {
+                _videoPlayerController.play();
+              },
             ),
-            onPressed: () {
-              _videoPlayerController.play();
-            },
+            visible: !isPlay,
           ),
-          visible: !isPlay,
-        )),
+        ),
       ],
     );
   }
@@ -129,7 +130,7 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
 
   initializePlayer(RooboVideoStateListener listener) async {
     if (widget.url.isEmpty) {
-      listener.onVideoError?.call(VIDEO_URL_NULL);
+      listener?.onVideoError?.call(VIDEO_URL_NULL);
       setState(() {
         _playStatus = _error;
       });
@@ -143,14 +144,14 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
     bool _oldInitStatus = false;
     bool videoHasEnd = false;
     bool isFirstPlay = true;
-    listener.onVideoPreparing?.call();
+    listener?.onVideoPreparing?.call();
     _videoPlayerController?.addListener(() async {
       addUIStateListener();
       if (_videoPlayerController.value.isInitialized) {
         if (_oldInitStatus != _videoPlayerController.value.isInitialized) {
           _oldInitStatus = _videoPlayerController.value.isInitialized;
           // print("lesson______VideoHelper: _____初始化完成______");
-          listener.onVideoPrepared?.call(_videoPlayerController.value.duration);
+          listener?.onVideoPrepared?.call(_videoPlayerController.value.duration);
         } else {
           if (videoHasEnd) {
             return;
@@ -158,13 +159,13 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
           if (_videoPlayerController.value.position.inSeconds == _videoPlayerController.value.duration.inSeconds) {
             videoHasEnd = true;
             // print("lesson______VideoHelper: _____结束______");
-            listener.onVideoFinished?.call();
+            listener?.onVideoFinished?.call();
             return;
           }
           if (_videoPlayerController.value.isPlaying) {
             if (isFirstPlay) {
               startedPlaying = true;
-              listener.onVideoStart?.call();
+              listener?.onVideoStart?.call();
               isFirstPlay = false;
             }
             // print("lesson______VideoHelper: _____播放______");
@@ -231,7 +232,6 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
         if (widget.startPlay != null) {
           widget.startPlay(mediaController);
         }
-        // _customVideoController.showControls = true;
       });
     }
   }
