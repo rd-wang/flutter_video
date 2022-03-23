@@ -96,40 +96,42 @@ class CustomVideoPlayerState extends State<CustomVideoPlayer> {
             Positioned(
                 left: 10,
                 top: 10,
-                child: Container(
-                  height: 30,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          if (controllerProvider.controller.videoPlayerController.value.hasError) {
-                            Navigator.of(context, rootNavigator: true).pop();
-                            _isFullScreen = false;
-                          } else {
-                            controllerProvider.controller.exitFullScreen();
-                          }
-                        },
-                      ),
-                      Container(
-                        width: 300,
-                        child: Text(
-                          widget.title != null && widget.title.isNotEmpty ? widget.title : "",
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
+                child: SafeArea(
+                  child: Container(
+                    height: 30,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            size: 20,
                             color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                          ),
+                          onPressed: () {
+                            if (controllerProvider.controller.videoPlayerController.value.hasError) {
+                              Navigator.of(context, rootNavigator: true).pop();
+                              _isFullScreen = false;
+                            } else {
+                              controllerProvider.controller.exitFullScreen();
+                            }
+                          },
+                        ),
+                        Container(
+                          width: 300,
+                          child: Text(
+                            widget.title != null && widget.title.isNotEmpty ? widget.title : "",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 )),
           ],
