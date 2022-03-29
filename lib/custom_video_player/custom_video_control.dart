@@ -85,7 +85,6 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
                   Container(
                     alignment: Alignment.bottomCenter,
                     child: SafeArea(
-                      minimum: EdgeInsets.only(bottom: 20),
                       child: Visibility(
                         visible: customVideoController.showControls,
                         child: _buildBottomBar(context),
@@ -207,7 +206,15 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
       opacity: _hideStuff ? 0.0 : 1.0,
       duration: const Duration(milliseconds: 300),
       child: Container(
-        height: barHeight,
+        height: barHeight+20,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            end: Alignment.bottomCenter,
+            begin: Alignment.topCenter,
+            colors: [Color(0x0000000), Color(0x33000000)],
+          ),
+        ),
         child: Row(
           children: <Widget>[
             _buildPlayPause(controller),
