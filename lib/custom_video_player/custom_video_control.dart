@@ -84,11 +84,9 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
                 children: [
                   Container(
                     alignment: Alignment.bottomCenter,
-                    child: SafeArea(
-                      child: Visibility(
-                        visible: customVideoController.showControls,
-                        child: _buildBottomBar(context),
-                      ),
+                    child: Visibility(
+                      visible: customVideoController.showControls,
+                      child: _buildBottomBar(context),
                     ),
                   ),
                   if (_latestValue.isBuffering)
