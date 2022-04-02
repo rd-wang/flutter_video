@@ -76,8 +76,8 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
   void initState() {
     super.initState();
     mediaController = MediaController();
-    mediaController.addListener(MediaWidgetListener(videoStopPlay: () {
-      _videoPlayerController.pause();
+    mediaController.addListener(MediaWidgetListener(videoStopPlay: () async {
+      await _videoPlayerController.pause();
     }));
     widget.videoListener ??
         RooboVideoStateListener(
@@ -130,10 +130,11 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
 
   initializePlayer(RooboVideoStateListener listener) async {
     if (widget.url.isEmpty) {
-      listener?.onVideoError?.call(VIDEO_URL_NULL);
-      setState(() {
-        _playStatus = _error;
-      });
+      await listener?.onVideoError?.call(VIDEO_URL_NULL);
+      if (mounted)
+        setState(() {
+          _playStatus = _error;
+        });
       return;
     }
     _videoPlayerController = VideoPlayerController.network(widget.url);
@@ -151,7 +152,7 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
         if (_oldInitStatus != _videoPlayerController.value.isInitialized) {
           _oldInitStatus = _videoPlayerController.value.isInitialized;
           // print("lesson______VideoHelper: _____初始化完成______");
-          listener?.onVideoPrepared?.call(_videoPlayerController.value.duration);
+          await listener?.onVideoPrepared?.call(_videoPlayerController.value.duration);
         } else {
           if (videoHasEnd) {
             return;
@@ -159,13 +160,13 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
           if (_videoPlayerController.value.position.inSeconds == _videoPlayerController.value.duration.inSeconds) {
             videoHasEnd = true;
             // print("lesson______VideoHelper: _____结束______");
-            listener?.onVideoFinished?.call();
+            await listener?.onVideoFinished?.call();
             return;
           }
           if (_videoPlayerController.value.isPlaying) {
             if (isFirstPlay) {
               startedPlaying = true;
-              listener?.onVideoStart?.call();
+              await listener?.onVideoStart?.call();
               isFirstPlay = false;
             }
             // print("lesson______VideoHelper: _____播放______");
@@ -176,7 +177,7 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
           if (startedPlaying && !_videoPlayerController.value.isPlaying && oldPlayStatus != _videoPlayerController.value.isPlaying) {
             oldPlayStatus = _videoPlayerController.value.isPlaying;
             // print("lesson______VideoHelper: _____暂停______");
-            listener?.onVideoPause?.call(_videoPlayerController.value.position, _videoPlayerController.value.duration);
+            await listener?.onVideoPause?.call(_videoPlayerController.value.position, _videoPlayerController.value.duration);
           }
         }
       }
@@ -196,7 +197,8 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
         return widget.isNoNet != null && widget.isNoNet();
       },
     );
-    setState(() {});
+    if (mounted)
+      setState(() {});
   }
 
   void addUIStateListener() {
@@ -204,35 +206,39 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
 
     if (_videoPlayerController.value.hasError) {
       if (widget.isNoNet != null && widget.isNoNet()) {
-        setState(() {
-          _playStatus = _noNet;
-        });
+        if (mounted)
+          setState(() {
+            _playStatus = _noNet;
+          });
       } else {
-        setState(() {
-          _playStatus = _error;
-        });
+        if (mounted)
+          setState(() {
+            _playStatus = _error;
+          });
       }
     }
 
     if (!_videoPlayerController.value.isPlaying) {
-      setState(() {
-        isPlay = false;
-        if (isHideBottom) {
-          _customVideoController?.showVideoControllers(false);
-          isHideBottom = false;
-        }
-      });
+      if (mounted)
+        setState(() {
+          isPlay = false;
+          if (isHideBottom) {
+            _customVideoController?.showVideoControllers(false);
+            isHideBottom = false;
+          }
+        });
     } else if (_videoPlayerController.value.isPlaying) {
-      setState(() {
-        isPlay = true;
-        if (!isHideBottom) {
-          _customVideoController?.showVideoControllers(true);
-          isHideBottom = true;
-        }
-        if (widget.startPlay != null) {
-          widget.startPlay(mediaController);
-        }
-      });
+      if (mounted)
+        setState(() {
+          isPlay = true;
+          if (!isHideBottom) {
+            _customVideoController?.showVideoControllers(true);
+            isHideBottom = true;
+          }
+          if (widget.startPlay != null) {
+            widget.startPlay(mediaController);
+          }
+        });
     }
   }
 
@@ -240,18 +246,21 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
     return GestureDetector(
       onTap: () async {
         if (widget.isNoNet != null && widget.isNoNet()) {
-          setState(() {
-            _playStatus = _noNet;
-          });
+          if (mounted)
+            setState(() {
+              _playStatus = _noNet;
+            });
           return;
         }
-        setState(() {
-          _playStatus = _normal;
-        });
-        if (_customVideoController.isFullScreen) {
-          await Navigator.of(context, rootNavigator: true).pop();
+        if (mounted) {
+          setState(() {
+            _playStatus = _normal;
+          });
+          if (_customVideoController.isFullScreen) {
+            await Navigator.of(context, rootNavigator: true).pop();
+          }
+          initializePlayer(widget.videoListener);
         }
-        initializePlayer(widget.videoListener);
       },
       child: Container(
         color: Colors.black,
@@ -282,10 +291,12 @@ class _RooboVideoWidgetState extends State<RooboVideoWidget> {
     } else if (_playStatus == _error) {
       return GestureDetector(
         onTap: () {
-          setState(() {
-            _playStatus = _normal;
-          });
-          initializePlayer(widget.videoListener);
+          if (mounted) {
+            setState(() {
+              _playStatus = _normal;
+            });
+            initializePlayer(widget.videoListener);
+          }
         },
         child: Center(
           child: Container(

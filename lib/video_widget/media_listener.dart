@@ -1,5 +1,5 @@
 typedef MediaEnablePlay = void Function(bool canPlay);
-typedef MediaStopPlay = void Function();
+typedef MediaStopPlay = Future<void> Function();
 typedef MediaInitCompleted = void Function(MediaController mediaController);
 typedef MediaStartPlay = void Function(MediaController mediaController);
 
@@ -22,10 +22,10 @@ class MediaController {
     }
   }
 
-  stopMediaPlay() {
+  Future<void> stopMediaPlay() async {
     if (this._videoWidgetListener != null) {
       if (this._videoWidgetListener.videoStopPlay != null) {
-        this._videoWidgetListener.videoStopPlay();
+        await this._videoWidgetListener.videoStopPlay();
       }
     }
   }
