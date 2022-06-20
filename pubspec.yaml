@@ -1,13 +1,11 @@
 name: roobo_video
 description: 自定义样式的videoplayer
-version: 1.4.4
-author:
-homepage:
+version: 1.5.0
 
 publish_to: none
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
@@ -17,12 +15,12 @@ dependencies:
   # https://pub.dev/packages/video_player
   # 在iOS上，后备播放器是AVPlayer, 支持的格式 https://developer.apple.com/documentation/avfoundation/avurlasset/1386800-audiovisualtypes?language=objc
   # 在Android上，后备播放器是ExoPlayer 支持的格式 https://exoplayer.dev/supported-formats.html
-  video_player: ^2.0.2
+  video_player: ^2.4.5
 
   # 保持设备屏幕清醒，即防止屏幕在Android，iOS和Web上休眠。
   # https://pub.dev/packages/wakelock
-  wakelock: ^0.5.0+2
-  flutter_spinkit: ^5.0.0 #progress动画库
+  wakelock: ^0.6.1+2
+  flutter_spinkit: ^5.1.0 #progress动画库
 
 
 dev_dependencies:

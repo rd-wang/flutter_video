@@ -6,19 +6,19 @@ import 'custom_video_progess_colors.dart';
 class CustomVideoProgressBar extends StatefulWidget {
   CustomVideoProgressBar(
     this.controller, {
-    CustomVideoProgressColors colors,
+    CustomVideoProgressColors? colors,
     this.onDragEnd,
     this.onDragStart,
     this.onDragUpdate,
-    Key key,
+    Key? key,
   })  : colors = colors ?? CustomVideoProgressColors(),
         super(key: key);
 
-  final VideoPlayerController controller;
+  final VideoPlayerController? controller;
   final CustomVideoProgressColors colors;
-  final Function() onDragStart;
-  final Function() onDragEnd;
-  final Function() onDragUpdate;
+  final Function()? onDragStart;
+  final Function()? onDragEnd;
+  final Function()? onDragUpdate;
 
   @override
   _CustomVideoProgressBarState createState() {
@@ -34,17 +34,17 @@ class _CustomVideoProgressBarState extends State<CustomVideoProgressBar> {
 
   bool _controllerWasPlaying = false;
 
-  VideoPlayerController get controller => widget.controller;
+  VideoPlayerController? get controller => widget.controller;
 
   @override
   void initState() {
     super.initState();
-    controller.addListener(listener);
+    controller!.addListener(listener);
   }
 
   @override
   void deactivate() {
-    controller.removeListener(listener);
+    controller!.removeListener(listener);
     super.deactivate();
   }
 
@@ -54,16 +54,16 @@ class _CustomVideoProgressBarState extends State<CustomVideoProgressBar> {
       final box = context.findRenderObject() as RenderBox;
       final Offset tapPos = box.globalToLocal(globalPosition);
       final double relative = tapPos.dx / box.size.width;
-      final Duration position = controller.value.duration * relative;
-      controller.seekTo(position);
+      final Duration position = controller!.value.duration * relative;
+      controller!.seekTo(position);
     }
 
     return GestureDetector(
       onHorizontalDragStart: (DragStartDetails details) {
-        if (!controller.value.isInitialized) {
+        if (!controller!.value.isInitialized) {
           return;
         }
-        _controllerWasPlaying = controller.value.isPlaying;
+        _controllerWasPlaying = controller!.value.isPlaying;
         // if (_controllerWasPlaying) {
         //   controller.pause();
         // }
@@ -71,7 +71,7 @@ class _CustomVideoProgressBarState extends State<CustomVideoProgressBar> {
         widget.onDragStart?.call();
       },
       onHorizontalDragUpdate: (DragUpdateDetails details) {
-        if (!controller.value.isInitialized) {
+        if (!controller!.value.isInitialized) {
           return;
         }
         seekToRelativePosition(details.globalPosition);
@@ -86,7 +86,7 @@ class _CustomVideoProgressBarState extends State<CustomVideoProgressBar> {
         widget.onDragEnd?.call();
       },
       onTapDown: (TapDownDetails details) {
-        if (!controller.value.isInitialized) {
+        if (!controller!.value.isInitialized) {
           return;
         }
         seekToRelativePosition(details.globalPosition);
@@ -96,7 +96,7 @@ class _CustomVideoProgressBarState extends State<CustomVideoProgressBar> {
         width: MediaQuery.of(context).size.width,
         child: CustomPaint(
           painter: _ProgressBarPainter(
-            controller.value,
+            controller!.value,
             widget.colors,
           ),
         ),

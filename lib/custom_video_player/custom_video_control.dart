@@ -9,7 +9,7 @@ import 'custom_video_progress_bar.dart';
 import 'utils.dart';
 
 class VideoControlWidget extends StatefulWidget {
-  const VideoControlWidget({Key key}) : super(key: key);
+  const VideoControlWidget({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -18,27 +18,27 @@ class VideoControlWidget extends StatefulWidget {
 }
 
 class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProviderStateMixin {
-  VideoPlayerValue _latestValue;
-  double _latestVolume;
+  late VideoPlayerValue _latestValue;
+  double? _latestVolume;
   bool _hideStuff = true;
-  Timer _hideTimer;
-  Timer _initTimer;
-  Timer _showAfterExpandCollapseTimer;
+  Timer? _hideTimer;
+  Timer? _initTimer;
+  Timer? _showAfterExpandCollapseTimer;
   bool _dragging = false;
   bool _displayTapped = false;
 
   final barHeight = 28.0;
   final marginSize = 5.0;
 
-  VideoPlayerController controller;
-  CustomVideoController _customController;
+  VideoPlayerController? controller;
+  CustomVideoController? _customController;
 
   bool _isShowSpeedSelect = false;
 
   // We know that _chewieController is set in didChangeDependencies
-  CustomVideoController get customVideoController => _customController;
-  AnimationController playPauseIconAnimationController;
-  AnimationController speedController;
+  CustomVideoController? get customVideoController => _customController;
+  late AnimationController playPauseIconAnimationController;
+  late AnimationController speedController;
 
   @override
   void initState() {
@@ -51,16 +51,16 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
     speedController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
   }
 
-  double _selected;
+  double? _selected;
 
   @override
   Widget build(BuildContext context) {
     // debugPrint("MediaQuery.of(context).padding.top / 2:${MediaQuery.of(context).padding.top / 2}");
     _selected = _latestValue.playbackSpeed;
     if (_latestValue.hasError) {
-      return customVideoController.errorBuilder?.call(
+      return customVideoController!.errorBuilder?.call(
             context,
-            customVideoController.videoPlayerController.value.errorDescription,
+            customVideoController!.videoPlayerController!.value.errorDescription,
           ) ??
           const Center(
             child: Icon(
@@ -85,7 +85,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
                   Container(
                     alignment: Alignment.bottomCenter,
                     child: Visibility(
-                      visible: customVideoController.showControls,
+                      visible: customVideoController!.showControls,
                       child: _buildBottomBar(context),
                     ),
                   ),
@@ -136,10 +136,10 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
                       child: ListView.builder(
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          final _speed = customVideoController.playbackSpeeds[index];
+                          final _speed = customVideoController!.playbackSpeeds[index];
                           return GestureDetector(
                             onTap: () async {
-                              await controller.setPlaybackSpeed(_speed);
+                              await controller!.setPlaybackSpeed(_speed);
                               _isShowSpeedSelect = false;
                               speedController.reset();
                               if (_latestValue.isPlaying) {
@@ -147,7 +147,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
                               }
                             },
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: customVideoController.isFullScreen ? 15.5 : 7),
+                              padding: EdgeInsets.symmetric(vertical: customVideoController!.isFullScreen ? 15.5 : 7),
                               child: Center(
                                 child: Text(
                                   _speed.toString() + "x",
@@ -157,7 +157,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
                             ),
                           );
                         },
-                        itemCount: customVideoController.playbackSpeeds.length,
+                        itemCount: customVideoController!.playbackSpeeds.length,
                       ),
                     ),
                   ),
@@ -177,7 +177,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
   }
 
   void _dispose() {
-    controller.removeListener(_updateState);
+    controller!.removeListener(_updateState);
     _hideTimer?.cancel();
     _initTimer?.cancel();
     _showAfterExpandCollapseTimer?.cancel();
@@ -187,7 +187,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
   void didChangeDependencies() {
     final _oldController = _customController;
     _customController = CustomVideoController.of(context);
-    controller = customVideoController.videoPlayerController;
+    controller = customVideoController!.videoPlayerController;
 
     if (_oldController != customVideoController) {
       _dispose();
@@ -215,13 +215,13 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
         ),
         child: Row(
           children: <Widget>[
-            _buildPlayPause(controller),
-            if (customVideoController.isLive) const Expanded(child: Text('LIVE')) else _buildStartPosition(_latestValue.position),
-            if (customVideoController.isLive) const SizedBox() else _buildProgressBar(),
-            if (customVideoController.isLive) const Expanded(child: Text('LIVE')) else _buildEndPosition(_latestValue.duration),
-            if (customVideoController.allowPlaybackSpeedChanging) _buildSpeedButton(controller),
+            _buildPlayPause(controller!),
+            if (customVideoController!.isLive) const Expanded(child: Text('LIVE')) else _buildStartPosition(_latestValue.position),
+            if (customVideoController!.isLive) const SizedBox() else _buildProgressBar(),
+            if (customVideoController!.isLive) const Expanded(child: Text('LIVE')) else _buildEndPosition(_latestValue.duration),
+            if (customVideoController!.allowPlaybackSpeedChanging) _buildSpeedButton(controller),
 //            if (chewieController.allowMuting) _buildMuteButton(controller),
-            if (customVideoController.allowFullScreen) _buildExpandButton(),
+            if (customVideoController!.allowFullScreen) _buildExpandButton(),
           ],
         ),
       ),
@@ -238,7 +238,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
           height: barHeight,
           margin: const EdgeInsets.only(left: 10, right: 10),
           child: Center(
-            child: customVideoController.isFullScreen
+            child: customVideoController!.isFullScreen
                 ? Image.asset(
                     'res/img/video_player_no_full.png',
                     package: 'roobo_video',
@@ -305,7 +305,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
 
   //加速按钮
   Widget _buildSpeedButton(
-    VideoPlayerController controller,
+    VideoPlayerController? controller,
   ) {
     return GestureDetector(
       onTap: () async {
@@ -424,15 +424,15 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
   }
 
   Future<void> _initialize() async {
-    controller.addListener(_updateState);
+    controller!.addListener(_updateState);
 
     _updateState();
 
-    if (controller.value.isPlaying || customVideoController.autoPlay) {
+    if (controller!.value.isPlaying || customVideoController!.autoPlay) {
       _startHideTimer();
     }
 
-    if (customVideoController.showControlsOnInitialize) {
+    if (customVideoController!.showControlsOnInitialize) {
       _initTimer = Timer(const Duration(milliseconds: 200), () {
         setState(() {
           _hideStuff = false;
@@ -445,7 +445,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
     setState(() {
       _hideStuff = true;
 
-      customVideoController.toggleFullScreen();
+      customVideoController!.toggleFullScreen();
       _showAfterExpandCollapseTimer = Timer(const Duration(milliseconds: 300), () {
         setState(() {
           _cancelAndRestartTimer();
@@ -456,31 +456,31 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
 
   void _playPause() {
     final isFinished = _latestValue.position >= _latestValue.duration;
-    if (_customController.isNetNone != null) {
-      if (_customController.isNetNone()) {
+    if (_customController!.isNetNone != null) {
+      if (_customController!.isNetNone!()) {
         return;
       }
     }
     setState(() {
-      if (controller.value.isPlaying) {
+      if (controller!.value.isPlaying) {
         playPauseIconAnimationController.reverse();
         _hideStuff = false;
         _hideTimer?.cancel();
-        controller.pause();
+        controller!.pause();
       } else {
         _cancelAndRestartTimer();
 
-        if (!controller.value.isInitialized) {
-          controller.initialize().then((_) {
-            controller.play();
+        if (!controller!.value.isInitialized) {
+          controller!.initialize().then((_) {
+            controller!.play();
             playPauseIconAnimationController.forward();
           });
         } else {
           if (isFinished) {
-            controller.seekTo(const Duration());
+            controller!.seekTo(const Duration());
           }
           playPauseIconAnimationController.forward();
-          controller.play();
+          controller!.play();
         }
       }
     });
@@ -496,7 +496,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
 
   void _updateState() {
     setState(() {
-      _latestValue = controller.value;
+      _latestValue = controller!.value;
     });
   }
 
@@ -520,7 +520,7 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
 
             _startHideTimer();
           },
-          colors: customVideoController.materialProgressColors,
+          colors: customVideoController!.materialProgressColors,
         ),
       ),
     );
@@ -529,9 +529,9 @@ class _VideoControlWidgetState extends State<VideoControlWidget> with TickerProv
 
 class _PlaybackSpeedDialog extends StatelessWidget {
   const _PlaybackSpeedDialog({
-    Key key,
-    @required List<double> speeds,
-    @required double selected,
+    Key? key,
+    required List<double> speeds,
+    required double selected,
   })  : _speeds = speeds,
         _selected = selected,
         super(key: key);

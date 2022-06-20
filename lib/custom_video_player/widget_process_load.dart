@@ -4,9 +4,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 enum ProgressLoadType { ThreeBounce, Circle, FadingCircle, Ring, WhiteFadingCircle }
 
 class ProgressLoadWidget extends StatelessWidget {
-  final ProgressLoadType type;
+  final ProgressLoadType? type;
 
-  const ProgressLoadWidget({Key key, this.type}) : super(key: key);
+  const ProgressLoadWidget({Key? key, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

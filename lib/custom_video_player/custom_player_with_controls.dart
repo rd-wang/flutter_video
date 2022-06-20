@@ -5,11 +5,11 @@ import 'package:video_player/video_player.dart';
 import 'custom_video_control.dart';
 
 class CustomPlayerWithControls extends StatelessWidget {
-  const CustomPlayerWithControls({Key key}) : super(key: key);
+  const CustomPlayerWithControls({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final CustomVideoController customVideoController = CustomVideoController.of(context);
+    final CustomVideoController customVideoController = CustomVideoController.of(context)!;
 
     double _calculateAspectRatio(BuildContext context) {
       final size = MediaQuery.of(context).size;
@@ -33,11 +33,11 @@ class CustomPlayerWithControls extends StatelessWidget {
           customVideoController.placeholder ?? Container(),
           Center(
             child: AspectRatio(
-              aspectRatio: customVideoController.aspectRatio ?? customVideoController.videoPlayerController.value.aspectRatio,
+              aspectRatio: customVideoController.aspectRatio ?? customVideoController.videoPlayerController!.value.aspectRatio,
               child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
-                  Center(child: VideoPlayer(customVideoController.videoPlayerController)),
+                  Center(child: VideoPlayer(customVideoController.videoPlayerController!)),
                   // _buildControls(context, customVideoController),
                 ],
               ),

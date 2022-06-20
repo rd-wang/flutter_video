@@ -24,14 +24,14 @@ typedef CheckNet = bool Function();
 /// make it easy to use!
 class CustomVideoPlayer extends StatefulWidget {
   const CustomVideoPlayer({
-    Key key,
+    Key? key,
     this.controller,
     this.title,
   }) : super(key: key);
 
   /// The [CustomVideoController]
-  final CustomVideoController controller;
-  final String title;
+  final CustomVideoController? controller;
+  final String? title;
 
   @override
   CustomVideoPlayerState createState() {
@@ -45,25 +45,25 @@ class CustomVideoPlayerState extends State<CustomVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(listener);
+    widget.controller!.addListener(listener);
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(listener);
+    widget.controller!.removeListener(listener);
     super.dispose();
   }
 
   @override
   void didUpdateWidget(CustomVideoPlayer oldWidget) {
     if (oldWidget.controller != widget.controller) {
-      widget.controller.addListener(listener);
+      widget.controller!.addListener(listener);
     }
     super.didUpdateWidget(oldWidget);
   }
 
   Future<void> listener() async {
-    if (widget.controller.isFullScreen && !_isFullScreen) {
+    if (widget.controller!.isFullScreen && !_isFullScreen) {
       _isFullScreen = true;
       await _pushFullScreenWidget(context);
     } else if (_isFullScreen) {
@@ -109,18 +109,18 @@ class CustomVideoPlayerState extends State<CustomVideoPlayer> {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            if (controllerProvider.controller.videoPlayerController.value.hasError) {
+                            if (controllerProvider.controller!.videoPlayerController!.value.hasError) {
                               Navigator.of(context, rootNavigator: true).pop();
                               _isFullScreen = false;
                             } else {
-                              controllerProvider.controller.exitFullScreen();
+                              controllerProvider.controller!.exitFullScreen();
                             }
                           },
                         ),
                         Container(
                           width: 300,
                           child: Text(
-                            widget.title != null && widget.title.isNotEmpty ? widget.title : "",
+                            widget.title != null && widget.title!.isNotEmpty ? widget.title! : "",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: TextStyle(
@@ -148,7 +148,7 @@ class CustomVideoPlayerState extends State<CustomVideoPlayer> {
   ) {
     return AnimatedBuilder(
       animation: animation,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         return _buildFullScreenVideo(context, animation, controllerProvider);
       },
     );
@@ -164,10 +164,10 @@ class CustomVideoPlayerState extends State<CustomVideoPlayer> {
       child: CustomPlayerWithControls(),
     );
 
-    if (widget.controller.routePageBuilder == null) {
+    if (widget.controller!.routePageBuilder == null) {
       return _defaultRoutePageBuilder(context, animation, secondaryAnimation, controllerProvider);
     }
-    return widget.controller.routePageBuilder(context, animation, secondaryAnimation, controllerProvider);
+    return widget.controller!.routePageBuilder!(context, animation, secondaryAnimation, controllerProvider);
   }
 
   Future<dynamic> _pushFullScreenWidget(BuildContext context) async {
@@ -177,39 +177,39 @@ class CustomVideoPlayerState extends State<CustomVideoPlayer> {
 
     onEnterFullScreen();
 
-    if (!widget.controller.allowedScreenSleep) {
+    if (!widget.controller!.allowedScreenSleep) {
       Wakelock.enable();
     }
 
     await Navigator.of(context, rootNavigator: true).push(route);
     _isFullScreen = false;
-    widget.controller.exitFullScreen();
+    widget.controller!.exitFullScreen();
 
     // The wakelock plugins checks whether it needs to perform an action internally,
     // so we do not need to check Wakelock.isEnabled.
     Wakelock.disable();
 
-    SystemChrome.setEnabledSystemUIOverlays(widget.controller.systemOverlaysAfterFullScreen);
+    SystemChrome.setEnabledSystemUIOverlays(widget.controller!.systemOverlaysAfterFullScreen);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
 //    SystemChrome.setPreferredOrientations(widget.controller.deviceOrientationsAfterFullScreen);
   }
 
   void onEnterFullScreen() {
-    final videoWidth = widget.controller.videoPlayerController.value.size.width;
-    final videoHeight = widget.controller.videoPlayerController.value.size.height;
+    final videoWidth = widget.controller!.videoPlayerController!.value.size.width;
+    final videoHeight = widget.controller!.videoPlayerController!.value.size.height;
 
-    if (widget.controller.systemOverlaysOnEnterFullScreen != null) {
+    if (widget.controller!.systemOverlaysOnEnterFullScreen != null) {
       /// Optional user preferred settings
-      SystemChrome.setEnabledSystemUIOverlays(widget.controller.systemOverlaysOnEnterFullScreen);
+      SystemChrome.setEnabledSystemUIOverlays(widget.controller!.systemOverlaysOnEnterFullScreen!);
     } else {
       /// Default behavior
       SystemChrome.setEnabledSystemUIOverlays([]);
     }
 
-    if (widget.controller.deviceOrientationsOnEnterFullScreen != null) {
+    if (widget.controller!.deviceOrientationsOnEnterFullScreen != null) {
       /// Optional user preferred settings
-      SystemChrome.setPreferredOrientations(widget.controller.deviceOrientationsOnEnterFullScreen);
+      SystemChrome.setPreferredOrientations(widget.controller!.deviceOrientationsOnEnterFullScreen!);
     } else {
       final isLandscapeVideo = videoWidth > videoHeight;
       final isPortraitVideo = videoWidth < videoHeight;
@@ -251,7 +251,7 @@ class CustomVideoPlayerState extends State<CustomVideoPlayer> {
 /// `VideoPlayerController`.
 class CustomVideoController extends ChangeNotifier {
   CustomVideoController({
-    @required this.videoPlayerController,
+    required this.videoPlayerController,
     this.aspectRatio,
     this.autoInitialize = false,
     this.autoPlay = false,
@@ -282,7 +282,7 @@ class CustomVideoController extends ChangeNotifier {
   }
 
   /// The controller for the video you want to play
-  final VideoPlayerController videoPlayerController;
+  final VideoPlayerController? videoPlayerController;
 
   /// Initialize the Video on Startup. This will prep the video for playback.
   final bool autoInitialize;
@@ -291,7 +291,7 @@ class CustomVideoController extends ChangeNotifier {
   final bool autoPlay;
 
   /// Start video at a certain position
-  final Duration startAt;
+  final Duration? startAt;
 
   /// Whether or not the video should loop
   final bool looping;
@@ -304,28 +304,28 @@ class CustomVideoController extends ChangeNotifier {
 
   /// Defines customised controls. Check [MaterialControls] or
   /// [CupertinoControls] for reference.
-  final Widget customControls;
+  final Widget? customControls;
 
   /// When the video playback runs into an error, you can build a custom
   /// error message.
-  final Widget Function(BuildContext context, String errorMessage) errorBuilder;
+  final Widget Function(BuildContext context, String? errorMessage)? errorBuilder;
 
   /// The Aspect Ratio of the Video. Important to get the correct size of the
   /// video!
   ///
   /// Will fallback to fitting within the space allowed.
-  final double aspectRatio;
+  final double? aspectRatio;
 
   /// The colors to use for the Material Progress Bar. By default, the Material
   /// player uses the colors from your Theme.
-  final CustomVideoProgressColors materialProgressColors;
+  final CustomVideoProgressColors? materialProgressColors;
 
   /// The placeholder is displayed underneath the Video before it is initialized
   /// or played.
-  final Widget placeholder;
+  final Widget? placeholder;
 
   /// A widget which is placed between the video and the controls
-  final Widget overlay;
+  final Widget? overlay;
 
   /// Defines if the player will start in fullscreen when play is pressed
   final bool fullScreenByDefault;
@@ -349,10 +349,10 @@ class CustomVideoController extends ChangeNotifier {
   final List<double> playbackSpeeds;
 
   /// Defines the system overlays visible on entering fullscreen
-  final List<SystemUiOverlay> systemOverlaysOnEnterFullScreen;
+  final List<SystemUiOverlay>? systemOverlaysOnEnterFullScreen;
 
   /// Defines the set of allowed device orientations on entering fullscreen
-  final List<DeviceOrientation> deviceOrientationsOnEnterFullScreen;
+  final List<DeviceOrientation>? deviceOrientationsOnEnterFullScreen;
 
   /// Defines the system overlays visible after exiting fullscreen
   final List<SystemUiOverlay> systemOverlaysAfterFullScreen;
@@ -361,12 +361,12 @@ class CustomVideoController extends ChangeNotifier {
   final List<DeviceOrientation> deviceOrientationsAfterFullScreen;
 
   /// Defines a custom RoutePageBuilder for the fullscreen
-  final CustomRoutePageBuilder routePageBuilder;
+  final CustomRoutePageBuilder? routePageBuilder;
 
-  final CheckNet isNetNone;
+  final CheckNet? isNetNone;
 
-  static CustomVideoController of(BuildContext context) {
-    final _customVideoControllerProvider = context.dependOnInheritedWidgetOfExactType<_CustomVideoControllerProvider>();
+  static CustomVideoController? of(BuildContext context) {
+    final _customVideoControllerProvider = context.dependOnInheritedWidgetOfExactType<_CustomVideoControllerProvider>()!;
     return _customVideoControllerProvider.controller;
   }
 
@@ -374,13 +374,13 @@ class CustomVideoController extends ChangeNotifier {
 
   bool get isFullScreen => _isFullScreen;
 
-  bool get isPlaying => videoPlayerController.value.isPlaying;
+  bool get isPlaying => videoPlayerController!.value.isPlaying;
 
   Future _initialize() async {
-    await videoPlayerController.setLooping(looping);
+    await videoPlayerController!.setLooping(looping);
 
-    if ((autoInitialize || autoPlay) && !videoPlayerController.value.isInitialized) {
-      await videoPlayerController.initialize();
+    if ((autoInitialize || autoPlay) && !videoPlayerController!.value.isInitialized) {
+      await videoPlayerController!.initialize();
     }
 
     if (autoPlay) {
@@ -388,22 +388,22 @@ class CustomVideoController extends ChangeNotifier {
         enterFullScreen();
       }
 
-      await videoPlayerController.play();
+      await videoPlayerController!.play();
     }
 
     if (startAt != null) {
-      await videoPlayerController.seekTo(startAt);
+      await videoPlayerController!.seekTo(startAt!);
     }
 
     if (fullScreenByDefault) {
-      videoPlayerController.addListener(_fullScreenListener);
+      videoPlayerController!.addListener(_fullScreenListener);
     }
   }
 
   Future<void> _fullScreenListener() async {
-    if (videoPlayerController.value.isPlaying && !_isFullScreen) {
+    if (videoPlayerController!.value.isPlaying && !_isFullScreen) {
       enterFullScreen();
-      videoPlayerController.removeListener(_fullScreenListener);
+      videoPlayerController!.removeListener(_fullScreenListener);
     }
   }
 
@@ -433,35 +433,35 @@ class CustomVideoController extends ChangeNotifier {
   }
 
   Future<void> play() async {
-    await videoPlayerController.play();
+    await videoPlayerController!.play();
   }
 
   // ignore: avoid_positional_boolean_parameters
   Future<void> setLooping(bool looping) async {
-    await videoPlayerController.setLooping(looping);
+    await videoPlayerController!.setLooping(looping);
   }
 
   Future<void> pause() async {
-    await videoPlayerController.pause();
+    await videoPlayerController!.pause();
   }
 
   Future<void> seekTo(Duration moment) async {
-    await videoPlayerController.seekTo(moment);
+    await videoPlayerController!.seekTo(moment);
   }
 
   Future<void> setVolume(double volume) async {
-    await videoPlayerController.setVolume(volume);
+    await videoPlayerController!.setVolume(volume);
   }
 }
 
 class _CustomVideoControllerProvider extends InheritedWidget {
   const _CustomVideoControllerProvider({
-    Key key,
-    @required this.controller,
-    @required Widget child,
+    Key? key,
+    required this.controller,
+    required Widget child,
   }) : super(key: key, child: child);
 
-  final CustomVideoController controller;
+  final CustomVideoController? controller;
 
   @override
   bool updateShouldNotify(_CustomVideoControllerProvider old) => controller != old.controller;
